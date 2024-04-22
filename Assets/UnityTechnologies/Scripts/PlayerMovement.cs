@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Animations;
 
 public class PlayerMovement : MonoBehaviour
 {
@@ -25,19 +26,27 @@ public class PlayerMovement : MonoBehaviour
     private Quaternion rotation = Quaternion.identity;
 
     private void Start()
-    {        
+    {
         // 문제 1) 위에 주어진 animator, rb 변수를 이용해 Component를 받아오는 명령어를 작성하세요.
         // (Component당 5점, 합계 5*2=10점, 부분점수 있음)
-
+        animator = GetComponent<Animator>();
+        rb = GetComponent<Rigidbody>();
+        movement = rb.velocity;
+        rotation = rb.rotation;
+     
+       
     }
 
     private void FixedUpdate()
     {
         // 문제 2) Input.GetAxis를 사용하여 존 레몬이 움직일 수 있게 좌표를 입력하세요.
         // 0f 대신 정답을 채워넣으면 작동합니다. (각 변수당 5점, 총 10점)
-        float horizontal = 0f; // 이 변수와
+        float horizontal = 0f;// 이 변수와
         float vertical = 0f; // 이 변수를 사용해야 합니다.
-        
+
+
+
+
         #region 건드리면 작동 안 됨
         movement.Set(horizontal, 0f, vertical);
         movement.Normalize();
@@ -46,16 +55,26 @@ public class PlayerMovement : MonoBehaviour
         // 문제 3) isWalking은 hasHorizontalInput과 hasVerticalInput중 하나만 입력되어도 true(참)가 되어야 합니다.
         // false를 지우고 제대로 된 명령줄을 완성해 주세요. (10점)
         bool hasHorizontalInput = !Mathf.Approximately(horizontal, 0f);
-        bool hasVerticalInput = !Mathf.Approximately(vertical, 0f);        
+        bool hasVerticalInput = !Mathf.Approximately(vertical, 0f);
 
-        bool isWalking = false;
+        bool isWalking = hasHorizontalInput && !hasVerticalInput;
 
         // 문제 4) isWalking 변수를 Animator의 IsWalking 파라미터에 적용하세요. (10점)
 
+        Animator animator2 = GetComponent<Animator>();
+
 
         // 문제 5) 원하는 방향으로 이동할 수 있는 Vector3값을 만드는 명령줄을 Vector3.zero를 지우고 완성해 주세요. (10점)
-        Vector3 desiredFoward = Vector3.zero;
-        rotation = Quaternion.LookRotation(desiredFoward);
+        Vector3 desiredFoward = rotation * movement.normalized;
+        Vector3 vector3 = desiredFoward;
+        Quaternion quaternion1 = Quaternion.LookRotation(desiredFoward);
+        Quaternion quaternion = Quaternion.LookRotation(desiredFoward);
+
+
+
+
+
+
 
     }
 
